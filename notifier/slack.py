@@ -38,6 +38,8 @@ class SlackNotifier(Notifier):
             
         except SlackApiError as e:
             print("Error sending image to Slack:", e.response["error"])
+        except Exception as e:
+            print("Error sending image to Slack:", e)
         finally:
             # clean up the image
             os.remove(filename)
