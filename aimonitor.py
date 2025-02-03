@@ -3,24 +3,27 @@ import signal
 import sys
 import os
 
-from notifier.slack import SlackNotifier
 from PIL import Image
 
 def main():
     parser = argparse.ArgumentParser(description="Security Camera Application")
     parser.add_argument('--sensor', type=str, choices=['webcam', 'imx500'], required=True, help="Type of sensor to use: 'webcam' or 'imx500'")
-    parser.add_argument('--channel', type=str, default=None, required=False, help="Id of the Slack channel to post notifications to")
+    parser.add_argument('--slack', type=str, default=None, required=False, help="POst notifications to the given slack channel, using the given slack token in SLACK_TOKEN")
+    parser.add_argument('--console', action='store_true', help="Print notifications to console")
     args = parser.parse_args()
 
-    token = os.getenv("SLACK_TOKEN")
-    if not token:
-        raise ValueError("SLACK_TOKEN environment variable not set")
-
-    notifier = SlackNotifier(token, args.channel)
+    if args.slack:
+        token = os.getenv("SLACK_TOKEN")
+        if not token:
+            raise ValueError("SLACK_TOKEN environment variable not set")
+        from notifier.slack import SlackNotifier
+        notifier = SlackNotifier(token, args.channel)
+    elif args.console:
+        from notifier.console import ConsoleNotifier
+        notifier = ConsoleNotifier()
 
     def on_event(metadata, frame):
-        print("Event detected:", metadata)
-        notifier.notify("Event detected", frame)
+        notifier.notify(metadata, frame)
 
     if args.sensor == 'webcam':
         from sensor.webcam import WebcamSensor

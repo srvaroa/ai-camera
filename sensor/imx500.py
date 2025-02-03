@@ -65,7 +65,7 @@ class IMX500Sensor(Sensor):
 
         self.picam2 = Picamera2(self.imx500.camera_num)
         config = self.picam2.create_preview_configuration(
-            controls={"FrameRate": 1}, buffer_count=12)
+            controls={"FrameRate": 2}, buffer_count=12)
         self.picam2.start(config, show_preview=False)
 
         if self.intrinsics.preserve_aspect_ratio:
@@ -76,10 +76,10 @@ class IMX500Sensor(Sensor):
             self.last_detections = self.parse_detections(self.picam2.capture_metadata())
             if len(self.last_detections) > 0:
                 for d in self.last_detections:
-                    print(str(d))
+                    # print(str(d))
                     if int(d.category) == 0: # based on COCO
                         self._onEvent("person", d.image_array)
-            time.sleep(1 / self.fps)
+            # time.sleep(1 / self.fps)
 
     def stop(self):
         self.running = False

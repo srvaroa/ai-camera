@@ -40,10 +40,16 @@ Pi, although expect it to be slow if the model runs on the CPU)
 
 ### 3. Run the application
 
-    python3 aimonitor.py --sensor=[webcam|imx500] --channel=<SLACK_CHANNEL_ID>
+To report detections to console, run the command below, selecting webcam
+or imx500 as the desired sensor:
 
-Use `imx500` when using the RPi AI Camera, or`webcam` if testing with a webcam.
+    python3 aimonitor.py --sensor=[webcam|imx500] --console
 
-To use the Slack notifier you need to provide a [bot
+To report to a Slack channel
+
+    python3 aimonitor.py --sensor=[webcam|imx500] --slack=<SLACK_CHANNEL_ID>
+
+Note that the Slack notifier expects a [bot
 token](https://api.slack.com/tutorials/tracks/getting-a-token) in a
 `SLACK_TOKEN` environment variable.
+
